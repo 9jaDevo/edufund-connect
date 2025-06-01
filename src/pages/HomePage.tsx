@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { GraduationCap, Search, DollarSign, BarChart4, Shield } from 'lucide-react';
+import { GraduationCap, Search, DollarSign, BarChart4, Shield, Users, ArrowRight } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Card, CardContent } from '../components/ui/Card';
 
@@ -7,51 +7,100 @@ const HomePage = () => {
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-500 to-primary-700 text-white">
+      <section className="bg-gradient-to-br from-primary-500 to-primary-700">
         <div className="container py-16 md:py-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="animate-slide-up">
-              <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl mb-6">
-                Transforming Education Through Transparent Funding
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="order-2 lg:order-1">
+              <img 
+                src="https://images.pexels.com/photos/8199562/pexels-photo-8199562.jpeg"
+                alt="Students learning"
+                className="rounded-2xl shadow-2xl"
+              />
+              <div className="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-lg p-4 hidden lg:block">
+                <div className="flex items-center space-x-2">
+                  <div className="flex -space-x-2">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="h-8 w-8 rounded-full bg-primary-100 border-2 border-white flex items-center justify-center text-xs font-medium text-primary-700">
+                        {String.fromCharCode(65 + i)}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">+150 donors this month</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <div className="flex items-center space-x-2 mb-6">
+                <span className="px-3 py-1 text-sm font-medium bg-white/10 text-white rounded-full">
+                  Trusted by 1000+ donors worldwide
+                </span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                Fund Education. Empower Communities. Build the Future.
               </h1>
-              <p className="text-lg md:text-xl mb-8 text-white/90">
-                EduFund Connect bridges donors with students, NGOs, and schools, 
-                ensuring every dollar is traceable and used for its intended purpose.
+              
+              <p className="text-xl text-white/90 mb-4 flex items-center">
+                <Shield className="h-5 w-5 mr-2" /> Verified
+                <span className="mx-3">•</span>
+                <DollarSign className="h-5 w-5 mr-2" /> Transparent
+                <span className="mx-3">•</span>
+                <Users className="h-5 w-5 mr-2" /> Monitored
               </p>
+              
+              <p className="text-lg text-white/80 mb-8">
+                Join our global community of donors making education accessible to those who need it most. Every contribution is tracked, verified, and monitored for maximum impact.
+              </p>
+              
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/students">
                   <Button 
                     variant="secondary" 
-                    size="lg" 
-                    className="font-semibold"
-                    leftIcon={<Search className="w-5 h-5" />}
+                    size="lg"
+                    className="w-full sm:w-auto font-semibold"
+                    leftIcon={<Search className="h-5 w-5" />}
                   >
-                    Browse Students
+                    Browse Beneficiaries
                   </Button>
                 </Link>
+                
+                <Link to="/projects">
+                  <Button 
+                    variant="outline" 
+                    size="lg"
+                    className="w-full sm:w-auto bg-white/10 border-white text-white hover:bg-white/20"
+                    leftIcon={<BarChart4 className="h-5 w-5" />}
+                  >
+                    View Projects
+                  </Button>
+                </Link>
+                
                 <Link to="/register">
                   <Button 
                     variant="outline" 
                     size="lg"
-                    className="bg-transparent border-white text-white hover:bg-white/10"
+                    className="w-full sm:w-auto bg-white/10 border-white text-white hover:bg-white/20"
+                    rightIcon={<ArrowRight className="h-5 w-5" />}
                   >
-                    Join EduFund
+                    Become a Donor
                   </Button>
                 </Link>
               </div>
-            </div>
-            <div className="hidden md:block relative">
-              <img 
-                src="https://images.pexels.com/photos/8844883/pexels-photo-8844883.jpeg" 
-                alt="Students studying" 
-                className="rounded-lg shadow-xl"
-              />
-              <div className="absolute -bottom-6 -left-6 bg-white rounded-lg shadow-lg p-4 w-48">
-                <div className="flex items-center space-x-2">
-                  <div className="rounded-full bg-success-500 h-3 w-3"></div>
-                  <p className="text-gray-800 font-medium">Active Students</p>
+              
+              <div className="mt-8 grid grid-cols-3 gap-6">
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-white">$1.2M+</p>
+                  <p className="text-sm text-white/80">Funds Disbursed</p>
                 </div>
-                <p className="text-3xl font-bold text-primary-500 mt-2">152</p>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-white">1,500+</p>
+                  <p className="text-sm text-white/80">Students Supported</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-white">98%</p>
+                  <p className="text-sm text-white/80">Success Rate</p>
+                </div>
               </div>
             </div>
           </div>
