@@ -50,7 +50,7 @@ export const useCountryDetection = () => {
   useEffect(() => {
     const detectCountry = async () => {
       try {
-        const response = await fetch('https://api.ipapi.is/api/v1/ip');
+        const response = await fetch('http://api.ipapi.is/api/v1/ip');
         const data = await response.json();
         
         if (data.success) {
