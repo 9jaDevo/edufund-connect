@@ -16,7 +16,7 @@ const LoginPage = () => {
   // Get the 'from' path from location state or default to '/'
   const from = (location.state as any)?.from?.pathname || '/';
   
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginData>();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<LoginData>();
   
   const onSubmit = async (data: LoginData) => {
     setIsSubmitting(true);
@@ -31,6 +31,19 @@ const LoginPage = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const demoAccounts = [
+    { role: 'Donor', email: 'donor@example.com' },
+    { role: 'Student', email: 'student@example.com' },
+    { role: 'NGO', email: 'ngo@example.com' },
+    { role: 'Monitoring Agent', email: 'agent@example.com' },
+    { role: 'Admin', email: 'admin@example.com' },
+  ];
+
+  const loginWithDemo = (email: string) => {
+    setValue('email', email);
+    setValue('password', 'password');
   };
 
   return (
@@ -124,14 +137,39 @@ const LoginPage = () => {
               >
                 Sign in
               </Button>
+            </form>
 
-              <div className="mt-4 text-center">
-                <p className="text-sm text-gray-600">
-                  Demo accounts: Use <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-800">donor@example.com</code>, <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-800">student@example.com</code>, etc.
-                  <br />with password <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-800">password</code>
+            <div className="mt-8">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Demo Accounts</span>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-4">
+                {demoAccounts.map((account) => (
+                  <div key={account.email} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">{account.role}</p>
+                      <p className="text-sm text-gray-500">{account.email}</p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => loginWithDemo(account.email)}
+                    >
+                      Use Account
+                    </Button>
+                  </div>
+                ))}
+                <p className="text-center text-sm text-gray-500 mt-4">
+                  All demo accounts use password: <code className="bg-gray-100 px-2 py-0.5 rounded">password</code>
                 </p>
               </div>
-            </form>
+            </div>
           </CardContent>
         </Card>
       </div>
