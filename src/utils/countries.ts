@@ -50,16 +50,23 @@ export const useCountryDetection = () => {
   useEffect(() => {
     const detectCountry = async () => {
       try {
-        const response = await fetch('http://api.ipapi.is/api/v1/ip');
+        const response = await fetch('https://api.ipapi.is/api/v1/ip');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
         
-        if (data.success) {
+        if (data.success && data.location?.country?.code) {
           const country = countries.find(c => c.code === data.location.country.code);
           if (country) {
             setDetectedCountry(country);
+          } else {
+            setError('Country not found in our list');
           }
         } else {
-          setError('Failed to detect country');
+          setError('Invalid response from country detection service');
         }
       } catch (err) {
         setError('Failed to detect country');
