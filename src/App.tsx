@@ -19,13 +19,12 @@ const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage')
 const ProfilePage = lazy(() => import('./pages/profile/ProfilePage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
-// Info Pages
-const HowItWorksPage = lazy(() => import('./pages/info/HowItWorksPage'));
-const ContactPage = lazy(() => import('./pages/info/ContactPage'));
+// Info pages
 const AboutPage = lazy(() => import('./pages/info/AboutPage'));
+const ContactPage = lazy(() => import('./pages/info/ContactPage'));
 const FAQPage = lazy(() => import('./pages/info/FAQPage'));
+const HowItWorksPage = lazy(() => import('./pages/info/HowItWorksPage'));
 const SuccessStoriesPage = lazy(() => import('./pages/info/SuccessStoriesPage'));
-const TransparencyReportPage = lazy(() => import('./pages/info/TransparencyReportPage'));
 const TermsPage = lazy(() => import('./pages/info/TermsPage'));
 const PrivacyPage = lazy(() => import('./pages/info/PrivacyPage'));
 
@@ -48,13 +47,12 @@ function App() {
             <Route path="admin" element={<AdminDashboardPage />} />
             <Route path="profile" element={<ProfilePage />} />
             
-            {/* Info Pages */}
-            <Route path="how-it-works" element={<HowItWorksPage />} />
-            <Route path="contact" element={<ContactPage />} />
+            {/* Info pages */}
             <Route path="about" element={<AboutPage />} />
+            <Route path="contact" element={<ContactPage />} />
             <Route path="faq" element={<FAQPage />} />
+            <Route path="how-it-works" element={<HowItWorksPage />} />
             <Route path="success-stories" element={<SuccessStoriesPage />} />
-            <Route path="transparency" element={<TransparencyReportPage />} />
             <Route path="terms" element={<TermsPage />} />
             <Route path="privacy" element={<PrivacyPage />} />
             
