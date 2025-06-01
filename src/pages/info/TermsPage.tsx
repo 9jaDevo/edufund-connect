@@ -9,6 +9,7 @@ const TermsPage = () => {
       <PageHero
         title="Terms of Service"
         description="Please read these terms carefully before using our platform."
+        image="https://images.pexels.com/photos/5428836/pexels-photo-5428836.jpeg"
       />
 
       <div className="container py-16">
