@@ -5,7 +5,8 @@ import { UserPlus, GraduationCap, Users, UserCheck, ShieldCheck, AlertCircle } f
 import { useAuthStore } from '../../stores/authStore';
 import { RegisterData, UserRole } from '../../types';
 import Button from '../../components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
+import { Card, CardContent } from '../../components/ui/Card';
+import CountrySelect from '../../components/ui/CountrySelect';
 
 const RegisterPage = () => {
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
@@ -13,13 +14,13 @@ const RegisterPage = () => {
   const { register: registerUser, error } = useAuthStore();
   const navigate = useNavigate();
   
-  const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<RegisterData>();
+  const { register, handleSubmit, watch, reset, setValue, formState: { errors } } = useForm<RegisterData>();
   
   const password = watch('password');
 
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
-    reset({ role }); // Set the role field
+    reset({ role });
   };
 
   const roleOptions = [
@@ -73,7 +74,7 @@ const RegisterPage = () => {
                   <p className="text-gray-600 mt-2">Choose the role that best describes you</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {roleOptions.map((option) => (
                     <button
                       key={option.role}
@@ -113,7 +114,6 @@ const RegisterPage = () => {
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Hidden role field */}
                   <input 
                     type="hidden" 
                     {...register('role')}
@@ -202,11 +202,9 @@ const RegisterPage = () => {
                         <label htmlFor="country" className="form-label">
                           Country
                         </label>
-                        <input
-                          id="country"
-                          type="text"
-                          className="form-input"
-                          {...register('country')}
+                        <CountrySelect
+                          value={watch('country')}
+                          onChange={(value) => setValue('country', value)}
                         />
                       </div>
                     </div>
@@ -277,20 +275,27 @@ const RegisterPage = () => {
                           })}
                         />
                       </div>
+                      <div>
+                        <label htmlFor="country" className="form-label">
+                          Country
+                        </label>
+                        <CountrySelect
+                          value={watch('country')}
+                          onChange={(value) => setValue('country', value)}
+                        />
+                      </div>
                     </div>
                   )}
 
                   {selectedRole === UserRole.MONITORING_AGENT && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label htmlFor="location" className="form-label">
-                          Location/Area of Operation
+                        <label htmlFor="country" className="form-label">
+                          Country
                         </label>
-                        <input
-                          id="location"
-                          type="text"
-                          className="form-input"
-                          {...register('location')}
+                        <CountrySelect
+                          value={watch('country')}
+                          onChange={(value) => setValue('country', value)}
                         />
                       </div>
                       <div>
