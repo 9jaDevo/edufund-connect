@@ -7,7 +7,8 @@ import {
   Award,
   Users,
   ArrowRight,
-  CheckCircle
+  CheckCircle,
+  Shield
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
