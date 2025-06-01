@@ -1,0 +1,40 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "projects": "Proyectos",
+    "students": "Estudiantes",
+    "reports": "Informes",
+    "settings": "Configuración"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "success": "Éxito",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "submit": "Enviar",
+    "status": {
+      "active": "Activo",
+      "pending": "Pendiente",
+      "completed": "Completado"
+    }
+  },
+  "errors": {
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Correo electrónico inválido",
+    "networkError": "Error de red. Por favor, inténtelo de nuevo",
+    "unauthorized": "Acceso no autorizado",
+    "notFound": "Recurso no encontrado"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "projects": "Projects",
+    "students": "Students",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "auth": {
+    "login": "Log in",
+    "register": "Register",
+    "logout": "Sign out",
+    "email": "Email address",
+    "password": "Password"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "submit": "Submit",
+    "status": {
+      "active": "Active",
+      "pending": "Pending",
+      "completed": "Completed"
+    }
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "networkError": "Network error. Please try again",
+    "unauthorized": "Unauthorized access",
+    "notFound": "Resource not found"
+  }
+}

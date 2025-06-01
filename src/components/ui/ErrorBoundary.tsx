@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
+import { AlertCircle } from 'lucide-react';
 import Button from './Button';
 
 interface Props {
@@ -22,6 +23,9 @@ class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
+    
+    // Here you could send the error to your error reporting service
+    // Example: Sentry.captureException(error);
   }
 
   public render() {
@@ -29,8 +33,11 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen flex items-center justify-center px-4 py-16 bg-gray-50">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Something went wrong</h1>
-            <p className="text-lg text-gray-600 mb-8">
+            <div className="flex items-center justify-center mb-4">
+              <AlertCircle className="h-12 w-12 text-error-500" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h1>
+            <p className="text-gray-600 mb-6">
               We apologize for the inconvenience. Please try refreshing the page.
             </p>
             <div className="space-x-4">
