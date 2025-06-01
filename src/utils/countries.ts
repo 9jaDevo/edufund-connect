@@ -50,7 +50,7 @@ export const useCountryDetection = () => {
   useEffect(() => {
     const detectCountry = async () => {
       try {
-        const response = await fetch('http://ip-api.com/json/24.48.0.1');
+        const response = await fetch('https://ip-api.com/json/');
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
