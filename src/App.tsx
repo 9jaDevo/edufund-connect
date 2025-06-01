@@ -22,6 +22,8 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 // Info Pages
 const HowItWorksPage = lazy(() => import('./pages/info/HowItWorksPage'));
 const ContactPage = lazy(() => import('./pages/info/ContactPage'));
+const AboutPage = lazy(() => import('./pages/info/AboutPage'));
+const FAQPage = lazy(() => import('./pages/info/FAQPage'));
 
 function App() {
   return (
@@ -45,6 +47,8 @@ function App() {
             {/* Info Pages */}
             <Route path="how-it-works" element={<HowItWorksPage />} />
             <Route path="contact" element={<ContactPage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="faq" element={<FAQPage />} />
             
             <Route path="*" element={<NotFoundPage />} />
           </Route>
