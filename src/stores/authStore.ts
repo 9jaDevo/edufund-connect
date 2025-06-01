@@ -50,15 +50,16 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true, error: null });
     
     try {
-      // Check if email exists
-      const { data: existingUser, error: checkError } = await supabase
+      // Check if email exists - removed .single() to handle no results properly
+      const { data: existingUsers, error: checkError } = await supabase
         .from('users')
         .select('*')
-        .eq('email', data.email)
-        .single();
+        .eq('email', data.email);
       
-      if (checkError && checkError.code !== 'PGRST116') throw checkError;
-      if (existingUser) {
+      if (checkError) throw checkError;
+      
+      // Check if any users were found with this email
+      if (existingUsers && existingUsers.length > 0) {
         set({ loading: false, error: 'Email already exists' });
         return;
       }
