@@ -22,6 +22,10 @@ const ContactPage = lazy(() => import('./pages/info/ContactPage'));
 const FAQPage = lazy(() => import('./pages/info/FAQPage'));
 const HowItWorksPage = lazy(() => import('./pages/info/HowItWorksPage'));
 const SuccessStoriesPage = lazy(() => import('./pages/info/SuccessStoriesPage'));
+const MonitoringProcessPage = lazy(() => import('./pages/info/MonitoringProcessPage'));
+const TransparencyReportPage = lazy(() => import('./pages/info/TransparencyReportPage'));
+const TermsPage = lazy(() => import('./pages/info/TermsPage'));
+const PrivacyPage = lazy(() => import('./pages/info/PrivacyPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 function App() {
@@ -47,6 +51,10 @@ function App() {
             <Route path="faq" element={<FAQPage />} />
             <Route path="how-it-works" element={<HowItWorksPage />} />
             <Route path="success-stories" element={<SuccessStoriesPage />} />
+            <Route path="monitoring-process" element={<MonitoringProcessPage />} />
+            <Route path="transparency-report" element={<TransparencyReportPage />} />
+            <Route path="terms" element={<TermsPage />} />
+            <Route path="privacy" element={<PrivacyPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
