@@ -17,6 +17,11 @@ const StudentDashboardPage = lazy(() => import('./pages/dashboard/StudentDashboa
 const MADashboardPage = lazy(() => import('./pages/dashboard/MADashboardPage'));
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
 const ProfilePage = lazy(() => import('./pages/profile/ProfilePage'));
+const AboutPage = lazy(() => import('./pages/info/AboutPage'));
+const ContactPage = lazy(() => import('./pages/info/ContactPage'));
+const FAQPage = lazy(() => import('./pages/info/FAQPage'));
+const HowItWorksPage = lazy(() => import('./pages/info/HowItWorksPage'));
+const SuccessStoriesPage = lazy(() => import('./pages/info/SuccessStoriesPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 function App() {
@@ -37,6 +42,11 @@ function App() {
             <Route path="monitor/dashboard" element={<MADashboardPage />} />
             <Route path="admin" element={<AdminDashboardPage />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="contact" element={<ContactPage />} />
+            <Route path="faq" element={<FAQPage />} />
+            <Route path="how-it-works" element={<HowItWorksPage />} />
+            <Route path="success-stories" element={<SuccessStoriesPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
