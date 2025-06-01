@@ -259,11 +259,179 @@ export interface Database {
           created_at?: string
         }
       }
-      // Include existing tables...
-      students: Row
-      funds: Row
-      disbursements: Row
-      monitoring_reports: Row
+      students: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          email: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          email?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      funds: {
+        Row: {
+          id: string
+          amount: number
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          amount: number
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          amount?: number
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      disbursements: {
+        Row: {
+          id: string
+          fund_id: string
+          amount: number
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          fund_id: string
+          amount: number
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          fund_id?: string
+          amount?: number
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      monitoring_reports: {
+        Row: {
+          id: string
+          project_id: string
+          content: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          content: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          content?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      ratings: {
+        Row: {
+          id: string
+          rater_id: string
+          rated_id: string
+          score: number
+          comment?: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          rater_id: string
+          rated_id: string
+          score: number
+          comment?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          rater_id?: string
+          rated_id?: string
+          score?: number
+          comment?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      badges: {
+        Row: {
+          id: string
+          name: string
+          description: string
+          type: string
+          level: string
+          criteria: Json
+          icon: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description: string
+          type: string
+          level: string
+          criteria: Json
+          icon: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string
+          type?: string
+          level?: string
+          criteria?: Json
+          icon?: string
+          created_at?: string
+        }
+      }
+      user_badges: {
+        Row: {
+          user_id: string
+          badge_id: string
+          awarded_at: string
+        }
+        Insert: {
+          user_id: string
+          badge_id: string
+          awarded_at?: string
+        }
+        Update: {
+          user_id?: string
+          badge_id?: string
+          awarded_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

@@ -7,6 +7,34 @@ export enum UserRole {
   ADMIN = 'admin',
 }
 
+export interface Rating {
+  id: string;
+  raterId: string;
+  ratedId: string;
+  score: number;
+  comment?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  type: 'donor' | 'ma' | 'ngo';
+  level: 'bronze' | 'silver' | 'gold';
+  criteria: Record<string, any>;
+  icon: string;
+  createdAt: string;
+}
+
+export interface UserBadge {
+  userId: string;
+  badgeId: string;
+  badge: Badge;
+  awardedAt: string;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -16,6 +44,11 @@ export interface User {
   isVerified: boolean;
   createdAt: string;
   updatedAt: string;
+  reputationScore?: number;
+  preferredLanguage?: string;
+  country?: string;
+  badges?: UserBadge[];
+  ratings?: Rating[];
 }
 
 export interface Donor extends User {
