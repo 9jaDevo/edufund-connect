@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 // User types
 export enum UserRole {
   DONOR = 'donor',
@@ -47,6 +49,9 @@ export interface User {
   reputationScore?: number;
   preferredLanguage?: string;
   country?: string;
+  city?: string;
+  phone?: string;
+  bio?: string;
   badges?: UserBadge[];
   ratings?: Rating[];
 }
@@ -90,58 +95,25 @@ export interface MonitoringAgent extends User {
   verified?: boolean;
 }
 
-// Funding types
-export enum FundStatus {
-  PENDING = 'pending',
-  ACTIVE = 'active',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-}
+// Form validation schemas
+export const loginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
 
-export enum DisbursementStatus {
-  PENDING = 'pending',
-  APPROVED = 'approved',
-  RELEASED = 'released',
-  REJECTED = 'rejected',
-}
-
-export interface Fund {
-  id: string;
-  donorId: string;
-  studentId: string;
-  schoolId: string;
-  amount: number;
-  status: FundStatus;
-  createdAt: string;
-  updatedAt: string;
-  monitoringAgentId?: string;
-  notes?: string;
-  purpose?: string;
-}
-
-export interface Disbursement {
-  id: string;
-  fundId: string;
-  amount: number;
-  status: DisbursementStatus;
-  releaseDate?: string;
-  batch: number;
-  monitoringReport?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface MonitoringReport {
-  id: string;
-  fundId: string;
-  disbursementId: string;
-  monitoringAgentId: string;
-  content: string;
-  status: 'draft' | 'submitted' | 'approved' | 'rejected';
-  attachments?: string[];
-  createdAt: string;
-  updatedAt: string;
-}
+export const registerSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  confirmPassword: z.string(),
+  role: z.nativeEnum(UserRole),
+  terms: z.boolean().refine((val) => val === true, {
+    message: 'You must agree to the terms and conditions',
+  }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
 
 // Auth types
 export interface AuthState {
@@ -149,22 +121,11 @@ export interface AuthState {
   user: User | null;
   loading: boolean;
   error: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   register: (data: RegisterData, role: UserRole) => Promise<void>;
+  updateProfile: (data: Partial<User>) => Promise<void>;
   logout: () => void;
 }
 
-export interface LoginData {
-  email: string;
-  password: string;
-}
-
-export interface RegisterData {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  role: UserRole;
-  // Additional fields based on role
-  [key: string]: any;
-}
+export type LoginData = z.infer<typeof loginSchema>;
+export type RegisterData = z.infer<typeof registerSchema>;

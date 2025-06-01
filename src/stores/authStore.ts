@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { AuthState, LoginData, RegisterData, User, UserRole } from '../types';
+import { showToast } from '../components/ui/Toast';
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
@@ -18,10 +19,13 @@ export const useAuthStore = create<AuthState>((set) => ({
         .eq('email', email)
         .limit(1);
       
-      if (error) throw error;
+      if (error) {
+        showToast.error('Failed to authenticate');
+        throw error;
+      }
       
       // Check if we found a user and validate password
-      if (data && data.length > 0 && password === 'password') { // Demo purposes only - replace with real auth
+      if (data && data.length > 0 && password === 'password') { // Demo purposes only
         const user = data[0];
         set({ 
           isAuthenticated: true, 
@@ -30,7 +34,8 @@ export const useAuthStore = create<AuthState>((set) => ({
           error: null
         });
         localStorage.setItem('user', JSON.stringify(user));
-        return true; // Return true for successful login
+        showToast.success('Welcome back!');
+        return true;
       } else {
         set({ 
           isAuthenticated: false, 
@@ -38,7 +43,8 @@ export const useAuthStore = create<AuthState>((set) => ({
           loading: false,
           error: 'Invalid email or password'
         });
-        return false; // Return false for failed login
+        showToast.error('Invalid email or password');
+        return false;
       }
     } catch (error) {
       set({ 
@@ -47,7 +53,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         loading: false,
         error: 'An error occurred during login'
       });
-      return false; // Return false for failed login
+      return false;
     }
   },
   
@@ -55,7 +61,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true, error: null });
     
     try {
-      // Check if email exists - removed .single() to handle no results properly
       const { data: existingUsers, error: checkError } = await supabase
         .from('users')
         .select('*')
@@ -63,13 +68,12 @@ export const useAuthStore = create<AuthState>((set) => ({
       
       if (checkError) throw checkError;
       
-      // Check if any users were found with this email
       if (existingUsers && existingUsers.length > 0) {
         set({ loading: false, error: 'Email already exists' });
+        showToast.error('Email already exists');
         return;
       }
       
-      // Create new user
       const { data: newUser, error: createError } = await supabase
         .from('users')
         .insert({
@@ -91,17 +95,49 @@ export const useAuthStore = create<AuthState>((set) => ({
       });
       
       localStorage.setItem('user', JSON.stringify(newUser));
+      showToast.success('Account created successfully!');
     } catch (error) {
       set({ 
         loading: false,
         error: 'An error occurred during registration'
       });
+      showToast.error('Failed to create account');
+    }
+  },
+  
+  updateProfile: async (data: Partial<User>) => {
+    set({ loading: true, error: null });
+    
+    try {
+      const { user } = useAuthStore.getState();
+      if (!user) throw new Error('No user logged in');
+      
+      const { data: updatedUser, error } = await supabase
+        .from('users')
+        .update(data)
+        .eq('id', user.id)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      set({
+        user: { ...user, ...updatedUser } as User,
+        loading: false,
+        error: null
+      });
+      
+      localStorage.setItem('user', JSON.stringify({ ...user, ...updatedUser }));
+    } catch (error) {
+      set({ loading: false, error: 'Failed to update profile' });
+      throw error;
     }
   },
   
   logout: () => {
     localStorage.removeItem('user');
     set({ isAuthenticated: false, user: null });
+    showToast.info('You have been logged out');
   }
 }));
 
