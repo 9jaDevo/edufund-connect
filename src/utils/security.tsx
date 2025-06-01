@@ -5,8 +5,6 @@ import { supabase } from '../lib/supabase';
 
 const RECAPTCHA_V3_SITE_KEY = import.meta.env.VITE_RECAPTCHA_V3_SITE_KEY;
 const RECAPTCHA_V2_SITE_KEY = import.meta.env.VITE_RECAPTCHA_V2_SITE_KEY;
-const RECAPTCHA_V3_SECRET_KEY = import.meta.env.RECAPTCHA_V3_SECRET_KEY;
-const RECAPTCHA_V2_SECRET_KEY = import.meta.env.RECAPTCHA_V2_SECRET_KEY;
 
 type ReCaptchaContextType = {
   showV2Challenge: boolean;
@@ -51,9 +49,9 @@ export const useReCaptcha = (action: string) => {
       try {
         setLoading(true);
         const result = await executeRecaptcha(action);
-        const score = await verifyV3Token(result);
+        const response = await verifyV3Token(result);
         
-        if (score < 0.5) {
+        if (response.score < 0.5) {
           setShowV2Challenge(true);
         } else {
           setToken(result);
@@ -79,8 +77,8 @@ export const useReCaptcha = (action: string) => {
     }
 
     try {
-      const isValid = await verifyV2Token(v2Token);
-      if (isValid) {
+      const response = await verifyV2Token(v2Token);
+      if (response.success) {
         setToken(v2Token);
         setShowV2Challenge(false);
         setError(null);
@@ -112,42 +110,44 @@ export const useReCaptcha = (action: string) => {
   };
 };
 
-const verifyV3Token = async (token: string): Promise<number> => {
+const verifyV3Token = async (token: string) => {
   try {
-    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-recaptcha`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+      },
       body: JSON.stringify({
-        secret: RECAPTCHA_V3_SECRET_KEY,
-        response: token,
+        token,
+        version: 'v3'
       }),
     });
 
     if (!response.ok) throw new Error('Verification failed');
-    
-    const data = await response.json();
-    return data.score || 0;
+    return await response.json();
   } catch (error) {
     console.error('Token verification error:', error);
     throw error;
   }
 };
 
-const verifyV2Token = async (token: string): Promise<boolean> => {
+const verifyV2Token = async (token: string) => {
   try {
-    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-recaptcha`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+      },
       body: JSON.stringify({
-        secret: RECAPTCHA_V2_SECRET_KEY,
-        response: token,
+        token,
+        version: 'v2'
       }),
     });
 
     if (!response.ok) throw new Error('Verification failed');
-    
-    const data = await response.json();
-    return data.success || false;
+    return await response.json();
   } catch (error) {
     console.error('V2 token verification error:', error);
     throw error;
