@@ -17,7 +17,7 @@ const countryOptions: CountryOption[] = countries.map(country => ({
 const CustomOption = ({ children, ...props }: OptionProps<CountryOption>) => (
   <components.Option {...props}>
     <div className="flex items-center">
-      <span className="mr-2">{props.data.flag}</span>
+      <span className="mr-2 text-xl">{props.data.flag}</span>
       {children}
     </div>
   </components.Option>
@@ -26,7 +26,7 @@ const CustomOption = ({ children, ...props }: OptionProps<CountryOption>) => (
 const CustomSingleValue = ({ children, ...props }: SingleValueProps<CountryOption>) => (
   <components.SingleValue {...props}>
     <div className="flex items-center">
-      <span className="mr-2">{props.data.flag}</span>
+      <span className="mr-2 text-xl">{props.data.flag}</span>
       {children}
     </div>
   </components.SingleValue>
@@ -39,7 +39,7 @@ interface CountrySelectProps {
 }
 
 const CountrySelect: React.FC<CountrySelectProps> = ({ value, onChange, className }) => {
-  const { detectedCountry, loading } = useCountryDetection();
+  const { detectedCountry, loading, error } = useCountryDetection();
 
   const selectedOption = value 
     ? countryOptions.find(option => option.value === value)
@@ -48,44 +48,48 @@ const CountrySelect: React.FC<CountrySelectProps> = ({ value, onChange, classNam
       : null;
 
   return (
-    <Select
-      value={selectedOption}
-      onChange={(option) => onChange(option?.value || '')}
-      options={countryOptions}
-      components={{
-        Option: CustomOption,
-        SingleValue: CustomSingleValue,
-      }}
-      className={className}
-      classNamePrefix="country-select"
-      isLoading={loading}
-      placeholder="Select a country"
-      isClearable
-      styles={{
-        control: (base) => ({
-          ...base,
-          borderColor: '#e5e7eb',
-          '&:hover': {
-            borderColor: '#d1d5db',
-          },
-          boxShadow: 'none',
-          '&:focus-within': {
-            borderColor: '#2563eb',
-            boxShadow: '0 0 0 1px #2563eb',
-          },
-        }),
-        option: (base, state) => ({
-          ...base,
-          backgroundColor: state.isSelected 
-            ? '#2563eb' 
-            : state.isFocused 
-              ? '#f3f4f6'
-              : undefined,
-          color: state.isSelected ? 'white' : undefined,
-          cursor: 'pointer',
-        }),
-      }}
-    />
+    <div className="space-y-1">
+      <Select
+        value={selectedOption}
+        onChange={(option) => onChange(option?.value || '')}
+        options={countryOptions}
+        components={{
+          Option: CustomOption,
+          SingleValue: CustomSingleValue,
+        }}
+        className={className}
+        classNamePrefix="country-select"
+        isLoading={loading}
+        placeholder={loading ? "Detecting your country..." : "Select a country"}
+        isClearable
+        isSearchable
+        styles={{
+          control: (base, state) => ({
+            ...base,
+            borderColor: state.isFocused ? '#0F766E' : '#e5e7eb',
+            boxShadow: state.isFocused ? '0 0 0 1px #0F766E' : 'none',
+            '&:hover': {
+              borderColor: state.isFocused ? '#0F766E' : '#d1d5db',
+            },
+          }),
+          option: (base, state) => ({
+            ...base,
+            backgroundColor: state.isSelected 
+              ? '#0F766E' 
+              : state.isFocused 
+                ? '#f3f4f6'
+                : undefined,
+            color: state.isSelected ? 'white' : undefined,
+            cursor: 'pointer',
+          }),
+          menu: (base) => ({
+            ...base,
+            zIndex: 50,
+          }),
+        }}
+      />
+      {error && <p className="text-sm text-error-600">{error}</p>}
+    </div>
   );
 };
 

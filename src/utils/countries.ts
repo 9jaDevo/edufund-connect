@@ -10,7 +10,6 @@ export const countries: Country[] = [
   { code: 'AF', name: 'Afghanistan', flag: '🇦🇫' },
   { code: 'AL', name: 'Albania', flag: '🇦🇱' },
   { code: 'DZ', name: 'Algeria', flag: '🇩🇿' },
-  // Add more countries...
   { code: 'US', name: 'United States', flag: '🇺🇸' },
   { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
   { code: 'CA', name: 'Canada', flag: '🇨🇦' },
@@ -51,12 +50,16 @@ export const useCountryDetection = () => {
   useEffect(() => {
     const detectCountry = async () => {
       try {
-        const response = await fetch('https://ipapi.co/json/');
+        const response = await fetch('http://ip-api.com/json');
         const data = await response.json();
         
-        const country = countries.find(c => c.code === data.country_code);
-        if (country) {
-          setDetectedCountry(country);
+        if (data.status === 'success') {
+          const country = countries.find(c => c.code === data.countryCode);
+          if (country) {
+            setDetectedCountry(country);
+          }
+        } else {
+          setError('Failed to detect country');
         }
       } catch (err) {
         setError('Failed to detect country');
