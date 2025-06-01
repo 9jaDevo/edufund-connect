@@ -9,6 +9,7 @@ const PrivacyPage = () => {
       <PageHero
         title="Privacy Policy"
         description="How we collect, use, and protect your personal information."
+        image="https://images.pexels.com/photos/5473955/pexels-photo-5473955.jpeg"
       />
 
       <div className="container py-16">
