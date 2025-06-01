@@ -16,18 +16,20 @@ export const useAuthStore = create<AuthState>((set) => ({
         .from('users')
         .select('*')
         .eq('email', email)
-        .single();
+        .limit(1);
       
       if (error) throw error;
       
-      if (data && password === 'password') { // Demo purposes only - replace with real auth
+      // Check if we found a user and validate password
+      if (data && data.length > 0 && password === 'password') { // Demo purposes only - replace with real auth
+        const user = data[0];
         set({ 
           isAuthenticated: true, 
-          user: data as User, 
+          user: user as User, 
           loading: false,
           error: null
         });
-        localStorage.setItem('user', JSON.stringify(data));
+        localStorage.setItem('user', JSON.stringify(user));
       } else {
         set({ 
           isAuthenticated: false, 
