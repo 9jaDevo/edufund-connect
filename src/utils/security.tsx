@@ -3,8 +3,10 @@ import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recapt
 import ReCAPTCHA from 'react-google-recaptcha';
 import { supabase } from '../lib/supabase';
 
-const RECAPTCHA_V3_SITE_KEY = '6LfWllIrAAAAANX1REF9xYT4XHUzo-QnCtW2DYWt';
-const RECAPTCHA_V2_SITE_KEY = '6LfhllIrAAAAAD1ND0kKEnXB5fZCz7dLXoNzxr30';
+const RECAPTCHA_V3_SITE_KEY = import.meta.env.VITE_RECAPTCHA_V3_SITE_KEY;
+const RECAPTCHA_V2_SITE_KEY = import.meta.env.VITE_RECAPTCHA_V2_SITE_KEY;
+const RECAPTCHA_V3_SECRET_KEY = import.meta.env.RECAPTCHA_V3_SECRET_KEY;
+const RECAPTCHA_V2_SECRET_KEY = import.meta.env.RECAPTCHA_V2_SECRET_KEY;
 
 type ReCaptchaContextType = {
   showV2Challenge: boolean;
@@ -116,7 +118,7 @@ const verifyV3Token = async (token: string): Promise<number> => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        secret: '6LfWllIrAAAAAPpTg2Xxta0iTi6QForMmkDzVWjq',
+        secret: RECAPTCHA_V3_SECRET_KEY,
         response: token,
       }),
     });
@@ -137,7 +139,7 @@ const verifyV2Token = async (token: string): Promise<boolean> => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        secret: '6LfhllIrAAAAANJDQ_a5o7ua7MgRugogU8kikKXE',
+        secret: RECAPTCHA_V2_SECRET_KEY,
         response: token,
       }),
     });
