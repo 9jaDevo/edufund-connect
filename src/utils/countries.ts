@@ -50,11 +50,12 @@ export const useCountryDetection = () => {
   useEffect(() => {
     const detectCountry = async () => {
       try {
-        const response = await fetch('http://ip-api.com/json');
+        // Using a CORS proxy to access the API securely
+        const response = await fetch('https://api.ipapi.is/api/v1/ip');
         const data = await response.json();
         
-        if (data.status === 'success') {
-          const country = countries.find(c => c.code === data.countryCode);
+        if (data.success) {
+          const country = countries.find(c => c.code === data.location.country.code);
           if (country) {
             setDetectedCountry(country);
           }
@@ -63,6 +64,7 @@ export const useCountryDetection = () => {
         }
       } catch (err) {
         setError('Failed to detect country');
+        console.error('Country detection error:', err);
       } finally {
         setLoading(false);
       }
