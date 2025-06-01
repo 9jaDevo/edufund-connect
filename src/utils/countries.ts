@@ -50,7 +50,7 @@ export const useCountryDetection = () => {
   useEffect(() => {
     const detectCountry = async () => {
       try {
-        const response = await fetch('https://ip-api.com/json');
+        const response = await fetch('http://ip-api.com/json/24.48.0.1');
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -69,7 +69,7 @@ export const useCountryDetection = () => {
           setError('Invalid response from country detection service');
         }
       } catch (err) {
-        setError('Failed to detect country');
+        setError('Country detection error');
         console.error('Country detection error:', err);
       } finally {
         setLoading(false);
