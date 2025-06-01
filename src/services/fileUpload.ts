@@ -1,35 +1,36 @@
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../lib/firebase';
+import { supabase } from '../lib/supabase';
 
 export const uploadFile = async (file: File, path: string): Promise<string> => {
   try {
-    // Create storage reference
-    const storageRef = ref(storage, path);
-    
-    // Upload file
-    const snapshot = await uploadBytes(storageRef, file);
-    
-    // Get download URL
-    const downloadUrl = await getDownloadURL(snapshot.ref);
-    
-    return downloadUrl;
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `${path}/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('documents')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage
+      .from('documents')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
   } catch (error) {
     console.error('File upload error:', error);
-    throw new Error('Failed to upload file');
+    throw error;
   }
 };
 
 export const uploadProfilePicture = async (file: File, userId: string): Promise<string> => {
-  const path = `profile-pictures/${userId}/${file.name}`;
-  return uploadFile(file, path);
+  return uploadFile(file, `profile-pictures/${userId}`);
 };
 
 export const uploadDocument = async (file: File, type: string, referenceId: string): Promise<string> => {
-  const path = `documents/${type}/${referenceId}/${file.name}`;
-  return uploadFile(file, path);
+  return uploadFile(file, `documents/${type}/${referenceId}`);
 };
 
 export const uploadMonitoringPhoto = async (file: File, reportId: string): Promise<string> => {
-  const path = `monitoring-photos/${reportId}/${file.name}`;
-  return uploadFile(file, path);
+  return uploadFile(file, `monitoring-photos/${reportId}`);
 };

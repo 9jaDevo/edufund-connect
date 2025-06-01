@@ -1,40 +1,37 @@
-import { messaging } from '../lib/firebase';
-import { getToken, onMessage } from 'firebase/messaging';
+import { supabase } from '../lib/supabase';
 import { showToast } from '../components/ui/Toast';
 
-export const initializeNotifications = async () => {
-  try {
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      const token = await getToken(messaging, {
-        vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
-      });
-      
-      // Send token to backend
-      await fetch('/api/notifications/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token })
-      });
-      
-      // Handle foreground messages
-      onMessage(messaging, (payload) => {
-        showToast.info(payload.notification?.body || 'New notification');
-      });
-    }
-  } catch (error) {
-    console.error('Failed to initialize notifications:', error);
-  }
+export const subscribeToNotifications = (userId: string) => {
+  const channel = supabase
+    .channel(`user_notifications:${userId}`)
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'notifications',
+      filter: `user_id=eq.${userId}`,
+    }, (payload) => {
+      showToast.info(payload.new.message);
+    })
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
 };
 
-export const sendNotification = async (userId: string, message: string) => {
+export const sendNotification = async (userId: string, message: string, type: string) => {
   try {
-    await fetch('/api/notifications/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, message })
-    });
+    const { error } = await supabase
+      .from('notifications')
+      .insert({
+        user_id: userId,
+        message,
+        type,
+      });
+
+    if (error) throw error;
   } catch (error) {
     console.error('Failed to send notification:', error);
+    throw error;
   }
 };
