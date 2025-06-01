@@ -22,8 +22,10 @@ const LoginPage = () => {
     setIsSubmitting(true);
     
     try {
-      await login(data.email, data.password);
-      navigate(from, { replace: true });
+      const success = await login(data.email, data.password);
+      if (success) {
+        navigate(from, { replace: true });
+      }
     } catch (error) {
       console.error('Login error:', error);
     } finally {

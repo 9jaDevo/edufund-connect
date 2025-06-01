@@ -30,6 +30,7 @@ export const useAuthStore = create<AuthState>((set) => ({
           error: null
         });
         localStorage.setItem('user', JSON.stringify(user));
+        return true; // Return true for successful login
       } else {
         set({ 
           isAuthenticated: false, 
@@ -37,6 +38,7 @@ export const useAuthStore = create<AuthState>((set) => ({
           loading: false,
           error: 'Invalid email or password'
         });
+        return false; // Return false for failed login
       }
     } catch (error) {
       set({ 
@@ -45,6 +47,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         loading: false,
         error: 'An error occurred during login'
       });
+      return false; // Return false for failed login
     }
   },
   
