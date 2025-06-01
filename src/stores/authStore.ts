@@ -1,62 +1,7 @@
 import { create } from 'zustand';
-import { 
-  AuthState, 
-  LoginData, 
-  RegisterData, 
-  User, 
-  UserRole 
-} from '../types';
+import { supabase } from '../lib/supabase';
+import { AuthState, LoginData, RegisterData, User, UserRole } from '../types';
 
-// Mock user data (to be replaced with API calls)
-const mockUsers: User[] = [
-  {
-    id: '1',
-    email: 'donor@example.com',
-    name: 'John Donor',
-    role: UserRole.DONOR,
-    isVerified: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    email: 'student@example.com',
-    name: 'Jane Student',
-    role: UserRole.STUDENT,
-    isVerified: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    email: 'school@example.com',
-    name: 'Horizon Academy',
-    role: UserRole.SCHOOL,
-    isVerified: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    email: 'agent@example.com',
-    name: 'Mary Monitor',
-    role: UserRole.MONITORING_AGENT,
-    isVerified: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    email: 'admin@example.com',
-    name: 'Admin User',
-    role: UserRole.ADMIN,
-    isVerified: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-];
-
-// Mock implementation (to be replaced with actual API calls)
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   user: null,
@@ -67,20 +12,22 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true, error: null });
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', email)
+        .single();
       
-      const user = mockUsers.find(u => u.email === email);
+      if (error) throw error;
       
-      if (user && password === 'password') { // Just for demo purposes
+      if (data && password === 'password') { // Demo purposes only - replace with real auth
         set({ 
           isAuthenticated: true, 
-          user, 
+          user: data as User, 
           loading: false,
           error: null
         });
-        // Store in localStorage for persistence (simplified)
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(data));
       } else {
         set({ 
           isAuthenticated: false, 
@@ -103,42 +50,40 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true, error: null });
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Check if email exists
+      const { data: existingUser, error: checkError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', data.email)
+        .single();
       
-      // Check if email already exists
-      const existingUser = mockUsers.find(u => u.email === data.email);
-      
+      if (checkError && checkError.code !== 'PGRST116') throw checkError;
       if (existingUser) {
-        set({ 
-          loading: false,
-          error: 'Email already exists'
-        });
+        set({ loading: false, error: 'Email already exists' });
         return;
       }
       
       // Create new user
-      const newUser: User = {
-        id: `${mockUsers.length + 1}`,
-        email: data.email,
-        name: data.name,
-        role,
-        isVerified: false, // New users need verification
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+      const { data: newUser, error: createError } = await supabase
+        .from('users')
+        .insert({
+          email: data.email,
+          name: data.name,
+          role: role,
+          is_verified: false,
+        })
+        .select()
+        .single();
       
-      // In a real app, this would be an API call to create the user
-      mockUsers.push(newUser);
+      if (createError) throw createError;
       
       set({ 
         isAuthenticated: true, 
-        user: newUser, 
+        user: newUser as User, 
         loading: false,
         error: null
       });
       
-      // Store in localStorage for persistence (simplified)
       localStorage.setItem('user', JSON.stringify(newUser));
     } catch (error) {
       set({ 
@@ -149,13 +94,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   
   logout: () => {
-    // Remove from localStorage
     localStorage.removeItem('user');
-    
-    set({ 
-      isAuthenticated: false, 
-      user: null
-    });
+    set({ isAuthenticated: false, user: null });
   }
 }));
 
@@ -175,5 +115,4 @@ const initAuth = () => {
   }
 };
 
-// Initialize auth state
 initAuth();
