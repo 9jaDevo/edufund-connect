@@ -50,8 +50,7 @@ export const useCountryDetection = () => {
   useEffect(() => {
     const detectCountry = async () => {
       try {
-        // Using a CORS proxy to access the API securely
-        const response = await fetch('https://api.ipapi.is/api/v1/ip');
+        const response = await fetch('http://api.ipapi.is/api/v1/ip');
         const data = await response.json();
         
         if (data.success) {
