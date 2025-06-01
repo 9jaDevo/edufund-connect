@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { DollarSign, Users, GraduationCap, BarChart, Calendar, ArrowUpRight, Download } from 'lucide-react';
+import { DollarSign, Users, GraduationCap, BarChart, Calendar, ArrowUpRight, Download, Plus } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import Button from '../../components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
