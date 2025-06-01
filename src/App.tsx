@@ -19,6 +19,10 @@ const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage')
 const ProfilePage = lazy(() => import('./pages/profile/ProfilePage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
+// Info Pages
+const HowItWorksPage = lazy(() => import('./pages/info/HowItWorksPage'));
+const ContactPage = lazy(() => import('./pages/info/ContactPage'));
+
 function App() {
   return (
     <ErrorBoundary>
@@ -37,6 +41,11 @@ function App() {
             <Route path="monitor/dashboard" element={<MADashboardPage />} />
             <Route path="admin" element={<AdminDashboardPage />} />
             <Route path="profile" element={<ProfilePage />} />
+            
+            {/* Info Pages */}
+            <Route path="how-it-works" element={<HowItWorksPage />} />
+            <Route path="contact" element={<ContactPage />} />
+            
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
