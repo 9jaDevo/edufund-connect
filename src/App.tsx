@@ -18,6 +18,7 @@ const NGODashboardPage = lazy(() => import('./pages/dashboard/NGODashboardPage')
 const MADashboardPage = lazy(() => import('./pages/dashboard/MADashboardPage'));
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
 const ProfilePage = lazy(() => import('./pages/profile/ProfilePage'));
+const SettingsPage = lazy(() => import('./pages/settings/SettingsPage'));
 const AboutPage = lazy(() => import('./pages/info/AboutPage'));
 const ContactPage = lazy(() => import('./pages/info/ContactPage'));
 const FAQPage = lazy(() => import('./pages/info/FAQPage'));
@@ -48,6 +49,7 @@ function App() {
             <Route path="monitor/dashboard" element={<MADashboardPage />} />
             <Route path="admin" element={<AdminDashboardPage />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="settings" element={<SettingsPage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="contact" element={<ContactPage />} />
             <Route path="faq" element={<FAQPage />} />
