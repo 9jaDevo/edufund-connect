@@ -20,6 +20,10 @@ export interface Database {
           monitoring_area?: Json
           created_at: string
           updated_at: string
+          reputation_score: number
+          preferred_language: string
+          country?: string
+          city?: string
         }
         Insert: {
           id?: string
@@ -31,6 +35,10 @@ export interface Database {
           monitoring_area?: Json
           created_at?: string
           updated_at?: string
+          reputation_score?: number
+          preferred_language?: string
+          country?: string
+          city?: string
         }
         Update: {
           id?: string
@@ -42,6 +50,10 @@ export interface Database {
           monitoring_area?: Json
           created_at?: string
           updated_at?: string
+          reputation_score?: number
+          preferred_language?: string
+          country?: string
+          city?: string
         }
       }
       projects: {
