@@ -14,6 +14,7 @@ const StudentsPage = lazy(() => import('./pages/students/StudentsPage'));
 const StudentDetailPage = lazy(() => import('./pages/students/StudentDetailPage'));
 const DonorDashboardPage = lazy(() => import('./pages/dashboard/DonorDashboardPage'));
 const StudentDashboardPage = lazy(() => import('./pages/dashboard/StudentDashboardPage'));
+const NGODashboardPage = lazy(() => import('./pages/dashboard/NGODashboardPage'));
 const MADashboardPage = lazy(() => import('./pages/dashboard/MADashboardPage'));
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
 const ProfilePage = lazy(() => import('./pages/profile/ProfilePage'));
@@ -43,6 +44,7 @@ function App() {
             <Route path="students/:id" element={<StudentDetailPage />} />
             <Route path="donor/dashboard" element={<DonorDashboardPage />} />
             <Route path="student/dashboard" element={<StudentDashboardPage />} />
+            <Route path="ngo/dashboard" element={<NGODashboardPage />} />
             <Route path="monitor/dashboard" element={<MADashboardPage />} />
             <Route path="admin" element={<AdminDashboardPage />} />
             <Route path="profile" element={<ProfilePage />} />
