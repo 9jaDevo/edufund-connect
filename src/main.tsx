@@ -65,7 +65,7 @@ function showInstallPromotion() {
   installBanner.id = 'install-banner';
   installBanner.style.cssText = `
     position: fixed;
-    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
     background: #0F766E;

@@ -24,7 +24,7 @@ const LoginPage = () => {
     try {
       const success = await login(data.email, data.password);
       if (success) {
-        navigate(from, { replace: true });
+        navigate('/dashboard', { replace: true });
       }
     } catch (error) {
       console.error('Login error:', error);
