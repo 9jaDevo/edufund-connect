@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, GraduationCap, LogIn } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import Button from '../ui/Button';
@@ -7,8 +7,9 @@ import UserMenu from './UserMenu';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, logout } = useAuthStore();
   const location = useLocation();
+  const navigate = useNavigate();
   
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -21,6 +22,12 @@ const Navbar = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
+
+  const handleMobileLogout = () => {
+    closeMenu();
+    logout();
+    navigate('/login');
+  };
 
   return (
     <nav className="bg-white border-b border-gray-200">
@@ -110,10 +117,7 @@ const Navbar = () => {
               </Link>
               <button
                 className="block w-full text-left py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-primary-500 rounded-md"
-                onClick={() => {
-                  closeMenu();
-                  useAuthStore.getState().logout();
-                }}
+                onClick={handleMobileLogout}
               >
                 Sign out
               </button>

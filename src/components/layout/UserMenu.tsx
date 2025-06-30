@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { User as UserIcon, LogOut, Settings, ChevronDown } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { User, UserRole } from '../../types';
@@ -12,6 +12,7 @@ const UserMenu = ({ user }: UserMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { logout } = useAuthStore();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -47,6 +48,12 @@ const UserMenu = ({ user }: UserMenuProps) => {
       default:
         return '/dashboard';
     }
+  };
+
+  const handleLogout = () => {
+    setIsOpen(false);
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -87,10 +94,7 @@ const UserMenu = ({ user }: UserMenuProps) => {
           
           <button
             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-error-600 flex items-center space-x-2"
-            onClick={() => {
-              setIsOpen(false);
-              logout();
-            }}
+            onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
             <span>Sign out</span>
