@@ -5,11 +5,13 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
+    /* Node compatibility */
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
+
+    /* For ts-node compatibility */
     "isolatedModules": true,
-    "moduleDetection": "force",
     "noEmit": true,
 
     /* Linting */
@@ -18,5 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts"]
+
+  "include": ["src", "vite.config.ts"]
 }

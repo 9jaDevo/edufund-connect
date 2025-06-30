@@ -7,7 +7,21 @@ const HomePage = () => {
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-500 to-primary-700">
+      <section className="bg-gradient-to-br from-primary-500 to-primary-700 relative">
+        {/* Bolt.new Badge */}
+        <a
+          href="https://bolt.new/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute top-4 right-4 z-50 hover:scale-110 transition-transform duration-200"
+        >
+          <img
+            src="/bolt-badge-white-circle.svg"
+            alt="Powered by Bolt.new"
+            className="h-12 w-12 md:h-16 md:w-16 drop-shadow-lg"
+          />
+        </a>
+
         <div className="container py-16 md:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">

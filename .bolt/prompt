@@ -1,5 +1,33 @@
-For all designs I ask you to make, have them be beautiful, not cookie cutter. Make webpages that are fully featured and worthy for production.
+You are building a comprehensive Student Sponsorship Platform with NGO Project Funding and Monitoring capabilities. This is a multi-phase project with the following structure:
 
-By default, this template supports JSX syntax with Tailwind CSS classes, React hooks, and Lucide React for icons. Do not install other packages for UI themes, icons, etc unless absolutely necessary or I request them.
+CORE FUNCTIONALITY:
+- Multi-role system: Donors, Students, Schools, NGOs, Monitoring Agents (MAs), and Admins
+- Student sponsorship with escrow funding and transparent monitoring
+- NGO project funding for community initiatives (boreholes, classrooms, etc.)
+- 3-stage monitoring and verification system
+- Gamification with ratings, badges, and reputation systems
 
-Use icons from lucide-react for logos.
+KEY FEATURES TO IMPLEMENT:
+1. **Authentication & User Management**: Multi-role registration with verification workflows
+2. **Donor Dashboard**: Student browsing, funding, project selection with filtering
+3. **Monitoring Agent System**: Assignment logic, 3-stage reporting, geolocation-based matching
+4. **Rating System**: 1-5 star ratings for all user types with profile averages
+5. **Badge System**: Bronze/Silver/Gold for MAs, sponsorship-based for Donors
+6. **Admin Panel**: User verification, fund disbursement control, audit logs
+
+TECHNICAL REQUIREMENTS:
+- Use React/Next.js for web frontend
+- Implement proper authentication and role-based access
+- Integrate mapping functionality (Google Maps API)
+- Include audit logging with export capabilities
+- Support internationalization (country/language selector)
+- Optional: Smart contract integration for staged disbursements
+
+DESIGN PRINCIPLES:
+- Prioritize transparency and trust-building features
+- Focus on user experience for social impact
+- Implement robust error handling and logging
+- Build production-ready, scalable components
+- Use modern UI patterns with Tailwind CSS and shadcn/ui
+
+Always consider the social impact nature of this platform and prioritize features that build trust between donors, beneficiaries, and monitoring agents.
