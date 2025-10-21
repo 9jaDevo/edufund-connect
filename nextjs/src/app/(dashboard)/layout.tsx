@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Bell, User, LogOut } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Bell, User } from 'lucide-react'
+import { LogoutButton } from '@/components/layout/logout-button'
 
 export default function DashboardLayout({
   children,
@@ -27,9 +27,7 @@ export default function DashboardLayout({
                 <User className="h-5 w-5 text-gray-600" />
               </button>
 
-              <Button variant="outline" size="sm" leftIcon={<LogOut className="h-4 w-4" />}>
-                Logout
-              </Button>
+              <LogoutButton />
             </div>
           </div>
         </div>
