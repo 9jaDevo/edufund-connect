@@ -1,16 +1,24 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { MapPin, Users, TrendingUp, Search } from 'lucide-react'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { ProjectCard } from '@/components/features/project-card'
+import { ProjectsFilters } from './projects-client'
 
-async function ProjectsList() {
+interface ProjectsListProps {
+  searchParams: {
+    search?: string
+    type?: string
+    location?: string
+    sort?: string
+  }
+}
+
+async function ProjectsList({ searchParams }: ProjectsListProps) {
   const supabase = await createServerSupabaseClient()
 
-  const { data: projects, error } = await supabase
+  let query = supabase
     .from('projects')
     .select(`
       id,
@@ -23,110 +31,102 @@ async function ProjectsList() {
       project_type,
       status,
       created_at,
+      start_date,
+      end_date,
       ngos (
         organization_name,
         rating_avg
       )
     `)
     .eq('status', 'active')
-    .order('created_at', { ascending: false })
-    .limit(12)
+
+  if (searchParams.search) {
+    query = query.or(`title.ilike.%${searchParams.search}%,description.ilike.%${searchParams.search}%`)
+  }
+
+  if (searchParams.type) {
+    query = query.eq('project_type', searchParams.type)
+  }
+
+  if (searchParams.location) {
+    query = query.ilike('location', `%${searchParams.location}%`)
+  }
+
+  switch (searchParams.sort) {
+    case 'oldest':
+      query = query.order('created_at', { ascending: true })
+      break
+    case 'most_funded':
+      query = query.order('amount_raised', { ascending: false })
+      break
+    case 'least_funded':
+      query = query.order('amount_raised', { ascending: true })
+      break
+    case 'urgent':
+      query = query.order('end_date', { ascending: true, nullsFirst: false })
+      break
+    default:
+      query = query.order('created_at', { ascending: false })
+  }
+
+  query = query.limit(24)
+
+  const { data: projects, error } = await query
 
   if (error) {
     console.error('Error fetching projects:', error)
-    return <div className="text-center py-12 text-error-500">Failed to load projects</div>
+    return (
+      <div className="text-center py-12">
+        <p className="text-error-500 mb-4">Failed to load projects</p>
+        <p className="text-sm text-gray-500">{error.message}</p>
+      </div>
+    )
   }
 
   if (!projects || projects.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">No active projects at the moment. Check back soon!</p>
+        <p className="text-gray-900 font-medium mb-2">No projects found</p>
+        <p className="text-gray-500 mb-4">
+          {searchParams.search || searchParams.type || searchParams.location
+            ? 'Try adjusting your filters to see more results'
+            : 'No active projects at the moment. Check back soon!'}
+        </p>
+        {(searchParams.search || searchParams.type || searchParams.location) && (
+          <Link href="/projects">
+            <Button variant="outline">Clear Filters</Button>
+          </Link>
+        )}
       </div>
     )
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {projects.map((project) => {
-        const progressPercentage = project.budget > 0
-          ? Math.round((project.amount_raised / project.budget) * 100)
-          : 0
-
-        return (
-          <Card key={project.id} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="flex justify-between items-start mb-2">
-                <Badge variant="primary">{project.project_type.replace('_', ' ')}</Badge>
-                <Badge variant="success">{progressPercentage}% funded</Badge>
-              </div>
-              <CardTitle className="line-clamp-2">{project.title}</CardTitle>
-              <div className="flex items-center gap-1 text-sm text-gray-500 mt-2">
-                <MapPin className="h-4 w-4" />
-                <span>{project.location}</span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 line-clamp-3 mb-4">
-                {project.description}
-              </p>
-
-              <div className="space-y-3 mb-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Raised</span>
-                    <span className="font-medium">
-                      ${project.amount_raised.toLocaleString()} of ${project.budget.toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-primary-500 h-2 rounded-full transition-all"
-                      style={{ width: `${Math.min(progressPercentage, 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="flex justify-between text-sm">
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-600">
-                      {project.beneficiaries_count} beneficiaries
-                    </span>
-                  </div>
-                  {project.ngos && Array.isArray(project.ngos) && project.ngos[0] && (
-                    <div className="flex items-center gap-1">
-                      <TrendingUp className="h-4 w-4 text-gray-400" />
-                      <span className="text-gray-600">
-                        {project.ngos[0].rating_avg?.toFixed(1) || 'N/A'} ★
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {project.ngos && Array.isArray(project.ngos) && project.ngos[0] && (
-                <p className="text-xs text-gray-500 mb-3">
-                  by {project.ngos[0].organization_name}
-                </p>
-              )}
-
-              <Link href={`/projects/${project.id}`}>
-                <Button variant="primary" size="sm" fullWidth>
-                  View Details & Donate
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        )
-      })}
+    <div>
+      <div className="mb-4 text-sm text-gray-600">
+        Showing {projects.length} project{projects.length !== 1 ? 's' : ''}
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((project) => (
+          <ProjectCard key={project.id} project={project as any} />
+        ))}
+      </div>
     </div>
   )
 }
 
-export default function ProjectsPage() {
+interface PageProps {
+  searchParams: {
+    search?: string
+    type?: string
+    location?: string
+    sort?: string
+  }
+}
+
+export default function ProjectsPage({ searchParams }: PageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white border-b">
         <div className="container py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -143,41 +143,16 @@ export default function ProjectsPage() {
         </div>
       </div>
 
-      {/* Filters Section */}
-      <div className="bg-white border-b">
-        <div className="container py-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search projects..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              />
-            </div>
-            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-              <option value="">All Types</option>
-              <option value="student_sponsorship">Student Sponsorship</option>
-              <option value="infrastructure">Infrastructure</option>
-              <option value="education_materials">Education Materials</option>
-              <option value="teacher_training">Teacher Training</option>
-              <option value="technology">Technology</option>
-            </select>
-            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-              <option value="">All Locations</option>
-              <option value="kenya">Kenya</option>
-              <option value="uganda">Uganda</option>
-              <option value="tanzania">Tanzania</option>
-              <option value="nigeria">Nigeria</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      <Suspense fallback={<div className="h-32" />}>
+        <ProjectsFilters />
+      </Suspense>
 
-      {/* Projects Grid */}
       <div className="container py-8">
-        <Suspense fallback={<LoadingSpinner size="lg" text="Loading projects..." />}>
-          <ProjectsList />
+        <Suspense
+          key={JSON.stringify(searchParams)}
+          fallback={<LoadingSpinner size="lg" text="Loading projects..." />}
+        >
+          <ProjectsList searchParams={searchParams} />
         </Suspense>
       </div>
     </div>
