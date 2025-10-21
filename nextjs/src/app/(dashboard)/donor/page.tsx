@@ -2,6 +2,8 @@ import { Heart, TrendingUp, Users, DollarSign } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
+export const dynamic = 'force-dynamic'
+
 export default function DonorDashboardPage() {
   return (
     <div>
